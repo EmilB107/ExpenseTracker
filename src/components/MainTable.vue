@@ -4,24 +4,37 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useStorage } from '../composable/useStorage'
 import { useMainLogic } from '../composable/useMainLogic'
 import WeeklyTable from './WeeklyTable.vue'
+import ExpensesForm from './ExpensesForm.vue'
 
-// Toggle state for weekly table
 const showWeeklyTable = ref(false)
+const showForm = ref(false)
 
-// Storage layer - manages expense data
 const { expenses } = useStorage()
 
-// Logic layer - handles search, filtering, calculations
 const {
   searchQuery,
   filteredExpenses,
   totalExpenses,
   formatCurrency
 } = useMainLogic(expenses)
+
+const handleAddClick = () => {
+  showForm.value = true
+}
+
+const handleFormCancel = () => {
+  showForm.value = false
+}
+
+const handleFormSubmit = () => {
+  showForm.value = false
+}
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto p-6">
+  <ExpensesForm v-if="showForm" @cancel="handleFormCancel" @submit="handleFormSubmit" />
+
+  <div v-else class="max-w-6xl mx-auto p-6">
     <div class="mb-6">
       <h1 class="text-2xl font-bold mb-5">Expense Tracker</h1>
       <div class="flex gap-3 items-center text-sm">
@@ -31,7 +44,7 @@ const {
           <input v-model="searchQuery" type="text" placeholder="Search by description"
             class="w-full sm:w-6/10 md:w-5/10 lg:w-4/10 pl-12 pr-4 py-2.5 border-2 border-gray-800 rounded-full focus:outline-none focus:border-blue-500 transition-colors placeholder:text-gray-400" />
         </div>
-        <button
+        <button @click="handleAddClick"
           class="px-8 lg:px-12 py-2.5 border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium">
           ADD
         </button>
@@ -66,7 +79,6 @@ const {
                 </td>
               </tr>
 
-              <!-- Empty state -->
               <tr v-if="filteredExpenses.length === 0">
                 <td colspan="3" class="px-6 py-4 text-center text-gray-500">
                   No expenses found matching "{{ searchQuery }}"
@@ -88,8 +100,10 @@ const {
         TOTAL EXPENSES = {{ formatCurrency(totalExpenses) }}
       </p>
     </div>
+
+    <!-- Weekly Table Component -->
+    <WeeklyTable v-if="showWeeklyTable" :expenses="expenses" />
   </div>
-  <WeeklyTable v-if="showWeeklyTable" :expenses="expenses" />
 </template>
 
 <style scoped>
