@@ -27,16 +27,14 @@ const {
   <div class="max-w-6xl lg:max-w-1/2 xl:max-w-1/3 mx-auto p-6 pt-0">
     <div class="mb-6">
       <div class="flex gap-3 items-center text-sm">
-        <div class="flex-1">
-          <select
-            v-model="selectedYear"
-            class="w-1/4 sm:w-1/5 md:w-1/6 lg:w-1/4 px-4 py-2.5 border-2 border-gray-800 rounded-full focus:outline-none focus:border-blue-500 transition-colors"
-          >
-            <option v-for="year in availableYears" :key="year" :value="year">
-              {{ year }}
-            </option>
-          </select>
-        </div>
+        <select
+          v-model="selectedYear"
+          class="w-1/3 sm:w-1/5 md:w-1/6 lg:w-1/4 px-4 py-2.5 border-2 border-gray-800 rounded-full focus:outline-none focus:border-blue-500 transition-colors"
+        >
+          <option v-for="year in availableYears" :key="year" :value="year">
+            {{ year }}
+          </option>
+        </select>
       </div>
     </div>
 
