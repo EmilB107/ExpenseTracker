@@ -2,14 +2,17 @@
 import { onMounted } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { useStorage } from '../composable/useStorage'
 import { useFormLogic } from '../composable/useFormLogic'
 import ConfirmationModal from './ConfirmationModal.vue'
 
-const emit = defineEmits(['cancel', 'submit'])
+const props = defineProps({
+  addExpense: {
+    type: Function,
+    required: true
+  }
+})
 
-// Storage layer
-const { addExpense } = useStorage()
+const emit = defineEmits(['cancel', 'submit'])
 
 // Form logic layer - pass dependencies
 const {
@@ -26,7 +29,7 @@ const {
   handleCancel,
   getMaxDate,
   initializeDate
-} = useFormLogic(addExpense, emit)
+} = useFormLogic(props.addExpense, emit)
 
 // Initialize date on mount
 onMounted(() => {

@@ -9,7 +9,7 @@ import ExpensesForm from './ExpensesForm.vue'
 const showWeeklyTable = ref(false)
 const showForm = ref(false)
 
-const { expenses } = useStorage()
+const { expenses, addExpense } = useStorage()
 
 const {
   searchQuery,
@@ -32,7 +32,7 @@ const handleFormSubmit = () => {
 </script>
 
 <template>
-  <ExpensesForm v-if="showForm" @cancel="handleFormCancel" @submit="handleFormSubmit" />
+  <ExpensesForm v-if="showForm" :add-expense="addExpense" @cancel="handleFormCancel" @submit="handleFormSubmit" />
 
   <div v-else class="max-w-6xl mx-auto p-6">
     <div class="mb-6">
