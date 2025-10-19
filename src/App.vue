@@ -1,11 +1,9 @@
 <script setup>
+import MainTable from './components/MainTable.vue'
 </script>
 
 <template>
-<div class="text-3xl font-bold underline">
-  Hello live with Tailwind
-</div>
-
+    <MainTable />
 </template>
 
 <style scoped>
