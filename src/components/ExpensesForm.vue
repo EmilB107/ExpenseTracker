@@ -106,6 +106,17 @@ input[type="number"] {
   appearance: textfield;
 }
 
+/* Fix autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.87);
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px #030712;
+}
+
 /* Custom date picker styling */
 :deep(.dp__input) {
   border: 2px solid rgb(31 41 55);
