@@ -1,7 +1,12 @@
 <script setup>
+import { ref } from 'vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useStorage } from '../composable/useStorage'
 import { useMainLogic } from '../composable/useMainLogic'
+import WeeklyTable from './WeeklyTable.vue'
+
+// Toggle state for weekly table
+const showWeeklyTable = ref(false)
 
 // Storage layer - manages expense data
 const { expenses } = useStorage()
@@ -21,15 +26,13 @@ const {
       <h1 class="text-2xl font-bold mb-5">Expense Tracker</h1>
       <div class="flex gap-3 items-center text-sm">
         <div class="flex-1 relative">
-          <MagnifyingGlassIcon class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search by description"
-            class="w-full sm:w-6/10 md:w-5/10 lg:w-4/10 pl-12 pr-4 py-2.5 border-2 border-gray-800 rounded-full focus:outline-none focus:border-blue-500 transition-colors placeholder:text-gray-400"
-          />
+          <MagnifyingGlassIcon
+            class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+          <input v-model="searchQuery" type="text" placeholder="Search by description"
+            class="w-full sm:w-6/10 md:w-5/10 lg:w-4/10 pl-12 pr-4 py-2.5 border-2 border-gray-800 rounded-full focus:outline-none focus:border-blue-500 transition-colors placeholder:text-gray-400" />
         </div>
-        <button class="px-8 lg:px-12 py-2.5 border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium">
+        <button
+          class="px-8 lg:px-12 py-2.5 border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium">
           ADD
         </button>
       </div>
@@ -46,13 +49,10 @@ const {
                 <th class="px-6 py-4 text-white font-bold w-35">AMOUNT</th>
               </tr>
             </thead>
-            
+
             <tbody>
-              <tr
-                v-for="(expense, index) in filteredExpenses"
-                :key="expense.id"
-                :class="index % 2 === 0 ? 'table-color' : 'table-color2'"
-              >
+              <tr v-for="(expense, index) in filteredExpenses" :key="expense.id"
+                :class="index % 2 === 0 ? 'table-color' : 'table-color2'">
                 <td class="px-6 py-4 whitespace-nowrap">
                   {{ expense.date }}
                 </td>
@@ -65,7 +65,7 @@ const {
                   {{ formatCurrency(expense.amount) }}
                 </td>
               </tr>
-              
+
               <!-- Empty state -->
               <tr v-if="filteredExpenses.length === 0">
                 <td colspan="3" class="px-6 py-4 text-center text-gray-500">
@@ -79,17 +79,17 @@ const {
     </div>
 
     <div class="mt-6 flex flex-col-reverse lg:flex-row gap-4 justify-between items-center font-medium">
-      <button
-        class="px-6 py-2.5 border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors text-sm"
-      >
-        View Weekly Totals by Year
+      <button @click="showWeeklyTable = !showWeeklyTable"
+        class="px-6 py-2.5 border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors text-sm">
+        {{ showWeeklyTable ? 'Hide Weekly Totals' : 'View Weekly Totals by Year' }}
       </button>
-      
-      <div class="text-lg">
+
+      <p class="text-md">
         TOTAL EXPENSES = {{ formatCurrency(totalExpenses) }}
-      </div>
+      </p>
     </div>
   </div>
+  <WeeklyTable v-if="showWeeklyTable" :expenses="expenses" />
 </template>
 
 <style scoped>
