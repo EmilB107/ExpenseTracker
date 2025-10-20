@@ -25,3 +25,22 @@
 .table-color2 {
   background-color: #172130;
 }
+
+/* Custom scrollbar for tables */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

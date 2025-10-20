@@ -103,23 +103,4 @@ const {
 .year-select option:hover {
   background-color: #1e293b;
 }
-
-/* Custom scrollbar for table */
-.overflow-y-auto::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 </style>

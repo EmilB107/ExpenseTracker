@@ -24,6 +24,7 @@ const {
   <ExpensesForm v-if="showForm" :add-expense="addExpense" @cancel="handleFormCancel" @submit="handleFormSubmit" />
 
   <div v-else class="max-w-6xl mx-auto p-6">
+
     <div class="mb-6">
       <h1 class="text-2xl font-bold mb-5">Expense Tracker</h1>
       <div class="flex gap-3 items-center text-sm">
@@ -90,28 +91,10 @@ const {
       </p>
     </div>
 
-    <!-- Weekly Table Component -->
     <WeeklyTable v-if="showWeeklyTable" :expenses="expenses" />
+    
   </div>
 </template>
 
 <style scoped>
-/* Custom scrollbar for table */
-.overflow-y-auto::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 </style>
