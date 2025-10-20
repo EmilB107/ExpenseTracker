@@ -24,10 +24,14 @@ const handleAddClick = () => {
 
 const handleFormCancel = () => {
   showForm.value = false
+  searchQuery.value = ''
+  showWeeklyTable.value = false
 }
 
 const handleFormSubmit = () => {
   showForm.value = false
+  searchQuery.value = ''
+  showWeeklyTable.value = false
 }
 </script>
 

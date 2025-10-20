@@ -23,7 +23,6 @@ const emit = defineEmits(['confirm', 'cancel'])
 
 
 <template>
-    <!-- Confirmation Modal -->
     <div v-if="show" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         @click.self="emit('cancel')">
         <div class="bg-[#0f172a] border-2 border-gray-800 rounded-lg p-8 max-w-md w-full mx-4">
