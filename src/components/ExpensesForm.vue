@@ -14,7 +14,6 @@ const props = defineProps({
 
 const emit = defineEmits(['cancel', 'submit'])
 
-// Form logic layer - pass dependencies
 const {
   formData,
   errors,
@@ -31,7 +30,6 @@ const {
   initializeDate
 } = useFormLogic(props.addExpense, emit)
 
-// Initialize date on mount
 onMounted(() => {
   initializeDate()
 })

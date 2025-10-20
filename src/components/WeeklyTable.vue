@@ -67,7 +67,6 @@ const {
                 </td>
               </tr>
               
-              <!-- Empty state -->
               <tr v-if="weeklyTotals.length === 0">
                 <td colspan="2" class="px-6 py-4 text-center text-gray-500">
                   No expenses found for {{ selectedYear }}
