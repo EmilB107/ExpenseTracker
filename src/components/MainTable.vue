@@ -79,7 +79,7 @@ const {
       </div>
     </div>
 
-    <div class="mt-6 flex flex-col-reverse lg:flex-row gap-4 justify-between items-center font-medium">
+    <div class="mt-6 mb-6 flex flex-col-reverse lg:flex-row gap-4 justify-between items-center font-medium">
       <button @click="showWeeklyTable = !showWeeklyTable"
         class="px-6 py-2.5 border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors text-sm">
         {{ showWeeklyTable ? 'Hide Weekly Totals' : 'View Weekly Totals by Year' }}
