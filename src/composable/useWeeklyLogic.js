@@ -108,22 +108,20 @@ export function useWeeklyLogic(expenses) {
             }
         })
 
-        // Get total number of weeks in the year
-        const totalWeeks = getTotalWeeksInYear(selectedYear.value)
-
-        // Create array with all weeks (including weeks with 0 expenses)
+        // Create array with only weeks that have expenses
         const result = []
-        for (let week = 1; week <= totalWeeks; week++) {
-            const dateRange = getWeekDateRange(selectedYear.value, week)
+        for (const weekNum in weeklyData) {
+            const dateRange = getWeekDateRange(selectedYear.value, parseInt(weekNum))
             result.push({
-                week,
-                total: weeklyData[week] || 0,
+                week: parseInt(weekNum),
+                total: weeklyData[weekNum],
                 startDate: formatDate(dateRange.start),
                 endDate: formatDate(dateRange.end)
             })
         }
 
-        return result
+        // Sort by week number in ascending order
+        return result.sort((a, b) => a.week - b.week)
     })
 
     // Total of all weekly expenses for the year
