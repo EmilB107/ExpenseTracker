@@ -1,38 +1,23 @@
 <script setup>
-import { ref } from 'vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useStorage } from '../composable/useStorage'
 import { useMainLogic } from '../composable/useMainLogic'
 import WeeklyTable from './WeeklyTable.vue'
 import ExpensesForm from './ExpensesForm.vue'
 
-const showWeeklyTable = ref(false)
-const showForm = ref(false)
-
 const { expenses, addExpense } = useStorage()
 
 const {
   searchQuery,
+  showWeeklyTable,
+  showForm,
   filteredExpenses,
   totalExpenses,
-  formatCurrency
+  formatCurrency,
+  handleAddClick,
+  handleFormCancel,
+  handleFormSubmit
 } = useMainLogic(expenses)
-
-const handleAddClick = () => {
-  showForm.value = true
-}
-
-const handleFormCancel = () => {
-  showForm.value = false
-  searchQuery.value = ''
-  showWeeklyTable.value = false
-}
-
-const handleFormSubmit = () => {
-  showForm.value = false
-  searchQuery.value = ''
-  showWeeklyTable.value = false
-}
 </script>
 
 <template>

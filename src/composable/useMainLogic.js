@@ -2,6 +2,8 @@ import { ref, computed } from 'vue'
 
 export function useMainLogic(expenses) {
     const searchQuery = ref('')
+    const showWeeklyTable = ref(false)
+    const showForm = ref(false)
 
     const filteredExpenses = computed(() => {
         if (!searchQuery.value) return expenses.value
@@ -25,12 +27,36 @@ export function useMainLogic(expenses) {
         return '₱' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
     }
 
-    return {
-        searchQuery,
+    const handleAddClick = () => {
+        showForm.value = true
+    }
 
+    const handleFormCancel = () => {
+        showForm.value = false
+        searchQuery.value = ''
+        showWeeklyTable.value = false
+    }
+
+    const handleFormSubmit = () => {
+        showForm.value = false
+        searchQuery.value = ''
+        showWeeklyTable.value = false
+    }
+
+    return {
+        // State
+        searchQuery,
+        showWeeklyTable,
+        showForm,
+
+        // Computed
         filteredExpenses,
         totalExpenses,
 
-        formatCurrency
+        // Methods
+        formatCurrency,
+        handleAddClick,
+        handleFormCancel,
+        handleFormSubmit
     }
 }
