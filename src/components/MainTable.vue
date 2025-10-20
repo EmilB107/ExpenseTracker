@@ -45,7 +45,7 @@ const {
       <div class="overflow-x-auto">
         <div class="max-h-95 overflow-y-auto">
           <table class="w-full border-collapse text-sm table-color text-left table-fixed">
-            <thead class="sticky top-0 z-10 table-color">
+            <thead class="sticky top-0 z-10 table-color border-b-1 border-gray-700">
               <tr>
                 <th class="px-6 py-4 text-white font-bold w-35">DATE</th>
                 <th class="px-6 py-4 text-white font-bold w-50">DESCRIPTION</th>
