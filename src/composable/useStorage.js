@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 export function useStorage() {
   const STORAGE_KEY = 'expense-tracker-data'
@@ -29,11 +29,29 @@ export function useStorage() {
     { id: 8, date: '10/08/2025', description: 'Utilities and internet service', amount: 156.80 },
   ]
 
-  const expenses = ref(loadExpenses())
+  const expensesRaw = ref(loadExpenses())
 
-  // Watch for changes and auto-save to localStorage
+  /**
+   * Parse MM/DD/YYYY date string to Date object for comparison
+   * @param {String} dateStr - Date string in MM/DD/YYYY format
+   * @returns {Date} Date object
+   */
+  const parseDate = (dateStr) => {
+    const [month, day, year] = dateStr.split('/')
+    return new Date(year, month - 1, day)
+  }
+
+  // Computed property to return expenses sorted by date (descending - newest first)
+  const expenses = computed(() => {
+    return [...expensesRaw.value].sort((a, b) => {
+      const dateA = parseDate(a.date)
+      const dateB = parseDate(b.date)
+      return dateB - dateA
+    })
+  })
+
   watch(
-    expenses,
+    expensesRaw,
     (newExpenses) => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newExpenses))
     },
@@ -47,11 +65,9 @@ export function useStorage() {
   const addExpense = (expense) => {
     const newExpense = {
       id: Date.now(),
-      date: new Date().toLocaleDateString('en-US'),
       ...expense
     }
-    expenses.value.unshift(newExpense)
-    // Auto-saved to localStorage via watcher
+    expensesRaw.value.push(newExpense)
   }
 
   return {
