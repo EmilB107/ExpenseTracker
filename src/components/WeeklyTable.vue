@@ -29,7 +29,7 @@ const {
       <div class="flex gap-3 items-center text-sm">
         <select
           v-model="selectedYear"
-          class="w-1/3 sm:w-1/5 md:w-1/6 lg:w-1/5 xl:w-1/4 px-4 py-2.5 border-2 border-gray-800 rounded-full focus:outline-none focus:border-blue-500 transition-colors"
+          class="year-select w-1/3 sm:w-1/5 md:w-1/6 lg:w-1/5 xl:w-1/4 px-4 py-2.5 border-2 border-gray-800 rounded-full focus:outline-none focus:border-blue-500 transition-colors"
         >
           <option v-for="year in availableYears" :key="year" :value="year">
             {{ year }}
@@ -89,6 +89,21 @@ const {
 </template>
 
 <style scoped>
+.year-select {
+  background-color: #030712;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.year-select option {
+  background-color: #0f172a;
+  color: rgba(255, 255, 255, 0.87);
+  padding: 8px;
+}
+
+.year-select option:hover {
+  background-color: #1e293b;
+}
+
 /* Custom scrollbar for table */
 .overflow-y-auto::-webkit-scrollbar {
   width: 8px;
