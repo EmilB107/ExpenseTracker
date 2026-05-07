@@ -5,7 +5,7 @@ import { useWeeklyLogic } from '../composable/useWeeklyLogic'
 // Receive expenses as a prop from parent
 const props = defineProps({
   expenses: {
-    type: Object, // This receives the unwrapped array from parent
+    type: Array,
     required: true
   }
 })

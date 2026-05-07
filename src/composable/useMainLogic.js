@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import { formatCurrency } from '../utils/currency'
 
 export function useMainLogic(expenses) {
     const searchQuery = ref('')
@@ -17,15 +18,6 @@ export function useMainLogic(expenses) {
     const totalExpenses = computed(() => {
         return filteredExpenses.value.reduce((sum, expense) => sum + expense.amount, 0)
     })
-
-    /**
-     * Format currency with peso sign and thousand separators
-     * @param {Number} amount - Amount to format
-     * @returns {String} Formatted currency string
-     */
-    const formatCurrency = (amount) => {
-        return '₱' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-    }
 
     const handleAddClick = () => {
         showForm.value = true

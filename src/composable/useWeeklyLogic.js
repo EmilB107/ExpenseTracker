@@ -1,4 +1,5 @@
 import { ref, computed, watch } from 'vue'
+import { formatCurrency } from '../utils/currency'
 
 export function useWeeklyLogic(expenses) {
     const selectedYear = ref(null)
@@ -128,11 +129,6 @@ export function useWeeklyLogic(expenses) {
     const yearlyTotal = computed(() => {
         return weeklyTotals.value.reduce((sum, week) => sum + week.total, 0)
     })
-
-    // Format currency with peso sign and thousand separators
-    const formatCurrency = (amount) => {
-        return '₱' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-    }
 
     return {
         selectedYear,
