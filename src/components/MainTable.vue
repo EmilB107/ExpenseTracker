@@ -71,7 +71,7 @@ const {
 
               <tr v-if="filteredExpenses.length === 0">
                 <td colspan="3" class="px-6 py-4 text-center text-gray-500">
-                  No expenses found matching "{{ searchQuery }}"
+                  {{ searchQuery ? `No expenses found matching "${searchQuery}"` : 'No expenses yet.' }}
                 </td>
               </tr>
             </tbody>
