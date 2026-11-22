@@ -23,6 +23,8 @@ const {
   formData,
   errors,
   showConfirmation,
+  isSaving,
+  saveError,
   selectedDate,
   isFormValid,
   updateFormDate,
@@ -41,8 +43,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="modal-backdrop fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-black/60 p-4">
-    <div class="modal-panel w-full max-w-lg my-8 bg-[#0f172a] border-2 border-gray-800 rounded-lg p-5 lg:p-8"
+  <div class="modal-backdrop fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4">
+    <div class="modal-panel w-full max-w-lg my-auto bg-[#0f172a] border-2 border-gray-800 rounded-lg p-5 lg:p-8"
       role="dialog" aria-modal="true" aria-labelledby="expense-modal-title">
       <h2 id="expense-modal-title" class="text-xl font-bold mb-5">
         <template v-if="showConfirmation">{{ isEditing ? 'Confirm Changes' : 'Confirm Expense' }}</template>
@@ -114,14 +116,16 @@ onMounted(() => {
           </div>
         </div>
 
+        <p v-if="saveError" class="mb-4 text-sm text-red-400">{{ saveError }}</p>
+
         <div class="flex gap-3 sm:gap-4 justify-end">
-          <button type="button" @click="handleCancelConfirmation"
-            class="px-5 sm:px-8 py-2 sm:py-2.5 text-sm sm:text-base border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium">
+          <button type="button" @click="handleCancelConfirmation" :disabled="isSaving"
+            class="px-5 sm:px-8 py-2 sm:py-2.5 text-sm sm:text-base border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed">
             Back
           </button>
-          <button type="button" @click="handleConfirmSubmit"
-            class="px-5 sm:px-8 py-2 sm:py-2.5 text-sm sm:text-base border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium">
-            Confirm
+          <button type="button" @click="handleConfirmSubmit" :disabled="isSaving"
+            class="px-5 sm:px-8 py-2 sm:py-2.5 text-sm sm:text-base border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+            {{ isSaving ? 'Saving…' : 'Confirm' }}
           </button>
         </div>
       </div>

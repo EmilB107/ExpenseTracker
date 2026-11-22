@@ -7,7 +7,10 @@ export function useMainLogic(expenses, { addExpense, updateExpense, deleteExpens
     const showForm = ref(false)
     const editingExpense = ref(null)
     const expenseToDelete = ref(null)
+    const isDeleting = ref(false)
+    const deleteError = ref('')
     const openMenu = ref(null)
+    const showSyncSettings = ref(false)
 
     const filteredExpenses = computed(() => {
         if (!searchQuery.value) return expenses.value
@@ -34,23 +37,32 @@ export function useMainLogic(expenses, { addExpense, updateExpense, deleteExpens
 
     const saveExpense = (data) => {
         if (editingExpense.value) {
-            updateExpense(editingExpense.value.id, data)
-        } else {
-            addExpense(data)
+            return updateExpense(editingExpense.value.id, data)
         }
+        return addExpense(data)
     }
 
     const handleDeleteClick = (expense) => {
+        deleteError.value = ''
         expenseToDelete.value = expense
     }
 
-    const handleDeleteConfirm = () => {
-        deleteExpense(expenseToDelete.value.id)
-        expenseToDelete.value = null
+    const handleDeleteConfirm = async () => {
+        isDeleting.value = true
+        deleteError.value = ''
+        try {
+            await deleteExpense(expenseToDelete.value.id)
+            expenseToDelete.value = null
+        } catch (error) {
+            deleteError.value = error.message
+        } finally {
+            isDeleting.value = false
+        }
     }
 
     const handleDeleteCancel = () => {
         expenseToDelete.value = null
+        deleteError.value = ''
     }
 
     const toggleMenu = (expense, anchor) => {
@@ -76,7 +88,10 @@ export function useMainLogic(expenses, { addExpense, updateExpense, deleteExpens
         showForm,
         editingExpense,
         expenseToDelete,
+        isDeleting,
+        deleteError,
         openMenu,
+        showSyncSettings,
 
         // Computed
         filteredExpenses,

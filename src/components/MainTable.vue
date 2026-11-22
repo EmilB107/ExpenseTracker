@@ -1,13 +1,28 @@
 <script setup>
-import { MagnifyingGlassIcon, EllipsisHorizontalIcon } from '@heroicons/vue/24/outline'
+import { computed } from 'vue'
+import { MagnifyingGlassIcon, EllipsisHorizontalIcon, CloudArrowUpIcon } from '@heroicons/vue/24/outline'
 import { useStorage } from '../composable/useStorage'
 import { useMainLogic } from '../composable/useMainLogic'
 import WeeklyTable from './WeeklyTable.vue'
 import ExpensesForm from './ExpensesForm.vue'
 import RowActionsMenu from './RowActionsMenu.vue'
 import DeleteExpenseModal from './DeleteExpenseModal.vue'
+import SyncStatus from './SyncStatus.vue'
+import SyncSettingsModal from './SyncSettingsModal.vue'
 
-const { expenses, addExpense, updateExpense, deleteExpense } = useStorage()
+const {
+  expenses,
+  addExpense,
+  updateExpense,
+  deleteExpense,
+  clientId,
+  setClientId,
+  syncStatus,
+  syncError,
+  signIn,
+  signOut,
+  refresh
+} = useStorage()
 
 const {
   searchQuery,
@@ -15,7 +30,10 @@ const {
   showForm,
   editingExpense,
   expenseToDelete,
+  isDeleting,
+  deleteError,
   openMenu,
+  showSyncSettings,
   filteredExpenses,
   totalExpenses,
   formatCurrency,
@@ -30,6 +48,12 @@ const {
   toggleMenu,
   closeMenu
 } = useMainLogic(expenses, { addExpense, updateExpense, deleteExpense })
+
+const syncIconClass = computed(() => {
+  if (syncStatus.value === 'local') return 'text-gray-400 hover:text-white'
+  if (syncStatus.value === 'expired' || syncStatus.value === 'error') return 'text-yellow-400 hover:text-yellow-300'
+  return 'text-green-400 hover:text-green-300'
+})
 </script>
 
 <template>
@@ -39,8 +63,13 @@ const {
   </Transition>
 
   <Transition name="modal">
-    <DeleteExpenseModal v-if="expenseToDelete" :expense="expenseToDelete" @confirm="handleDeleteConfirm"
-      @cancel="handleDeleteCancel" />
+    <DeleteExpenseModal v-if="expenseToDelete" :expense="expenseToDelete" :is-deleting="isDeleting"
+      :error="deleteError" @confirm="handleDeleteConfirm" @cancel="handleDeleteCancel" />
+  </Transition>
+
+  <Transition name="modal">
+    <SyncSettingsModal v-if="showSyncSettings" :client-id="clientId" :status="syncStatus" :error="syncError"
+      @save="setClientId" @close="showSyncSettings = false" @sign-in="signIn" @sign-out="signOut" @retry="refresh" />
   </Transition>
 
   <RowActionsMenu v-if="openMenu" :anchor="openMenu.anchor" @edit="handleEditClick(openMenu.expense)"
@@ -49,7 +78,18 @@ const {
   <div class="max-w-6xl mx-auto p-6">
 
     <div class="mb-6">
-      <h1 class="text-2xl font-bold mb-5">Expense Tracker</h1>
+      <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 mb-5">
+        <div class="flex items-center gap-2">
+          <h1 class="text-2xl font-bold">Expense Tracker</h1>
+          <button type="button" @click="showSyncSettings = true" aria-label="Google Drive sync settings"
+            title="Google Drive sync settings"
+            class="p-1.5 rounded-full hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors"
+            :class="syncIconClass">
+            <CloudArrowUpIcon class="w-6 h-6" />
+          </button>
+        </div>
+        <SyncStatus v-if="!showSyncSettings" :status="syncStatus" :error="syncError" @sign-in="signIn" @sign-out="signOut" @retry="refresh" />
+      </div>
       <div class="flex gap-3 items-center text-sm">
         <div class="flex-1 relative">
           <MagnifyingGlassIcon
@@ -104,7 +144,10 @@ const {
 
               <tr v-if="filteredExpenses.length === 0">
                 <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-                  {{ searchQuery ? `No expenses found matching "${searchQuery}"` : 'No expenses yet.' }}
+                  <template v-if="searchQuery">No expenses found matching "{{ searchQuery }}"</template>
+                  <template v-else-if="syncStatus === 'loading'">Loading your expenses…</template>
+                  <template v-else-if="syncStatus === 'expired'">Reconnect Google Drive to see your expenses.</template>
+                  <template v-else>No expenses yet.</template>
                 </td>
               </tr>
             </tbody>

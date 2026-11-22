@@ -10,6 +10,8 @@ export function useFormLogic(save, emit, initialExpense = null) {
     })
 
     const showConfirmation = ref(false)
+    const isSaving = ref(false)
+    const saveError = ref('')
     const selectedDate = ref(new Date())
 
     const errors = ref({
@@ -116,15 +118,24 @@ export function useFormLogic(save, emit, initialExpense = null) {
         }
     }
 
-    const handleConfirmSubmit = () => {
+    const handleConfirmSubmit = async () => {
         // Format date as MM/DD/YYYY
         const formattedDate = formatDateForDisplay(selectedDate.value)
 
-        save({
-            date: formattedDate,
-            description: formData.value.description,
-            amount: parseFloat(formData.value.amount)
-        })
+        isSaving.value = true
+        saveError.value = ''
+        try {
+            await save({
+                date: formattedDate,
+                description: formData.value.description,
+                amount: parseFloat(formData.value.amount)
+            })
+        } catch (error) {
+            saveError.value = error.message
+            return
+        } finally {
+            isSaving.value = false
+        }
 
         resetForm()
         showConfirmation.value = false
@@ -133,6 +144,7 @@ export function useFormLogic(save, emit, initialExpense = null) {
 
     const handleCancelConfirmation = () => {
         showConfirmation.value = false
+        saveError.value = ''
     }
 
     const handleCancel = () => {
@@ -151,6 +163,8 @@ export function useFormLogic(save, emit, initialExpense = null) {
         formData,
         errors,
         showConfirmation,
+        isSaving,
+        saveError,
         selectedDate,
 
         // Computed
