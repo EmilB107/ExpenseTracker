@@ -3,7 +3,7 @@ import { onMounted } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { useFormLogic } from '../composable/useFormLogic'
-import ConfirmationModal from './ConfirmationModal.vue'
+import { formatCurrency } from '../utils/currency'
 
 const props = defineProps({
   addExpense: {
@@ -36,10 +36,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto p-8">
-    <h1 class="text-2xl font-bold mb-5">Add New Expense</h1>
-    <div class="border-2 border-gray-800 rounded-lg p-5 lg:p-10">
-      <form @submit.prevent="handleSubmit" class="space-y-6">
+  <div class="modal-backdrop fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-black/60 p-4">
+    <div class="modal-panel w-full max-w-lg my-8 bg-[#0f172a] border-2 border-gray-800 rounded-lg p-5 lg:p-8"
+      role="dialog" aria-modal="true" aria-labelledby="expense-modal-title">
+      <h2 id="expense-modal-title" class="text-xl font-bold mb-5">
+        {{ showConfirmation ? 'Confirm Expense' : 'Add New Expense' }}
+      </h2>
+
+      <form v-show="!showConfirmation" @submit.prevent="handleSubmit" class="space-y-6">
 
         <div class="space-y-2">
           <label for="date" class="block text-sm font-medium">
@@ -83,11 +87,39 @@ onMounted(() => {
           </button>
         </div>
       </form>
-    </div>
 
-    <ConfirmationModal :show="showConfirmation" :date="formatDateForDisplay(selectedDate)"
-      :description="formData.description" :amount="parseFloat(formData.amount || 0)" @confirm="handleConfirmSubmit"
-      @cancel="handleCancelConfirmation" />
+      <div v-if="showConfirmation">
+        <p class="mb-6 text-gray-300">
+          Are you sure you want to add this expense? You won't be able to edit or delete it later.
+        </p>
+
+        <div class="mb-6 space-y-2 text-sm">
+          <div class="flex justify-between gap-4">
+            <span class="text-gray-400">Date:</span>
+            <span class="font-medium">{{ formatDateForDisplay(selectedDate) }}</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <span class="text-gray-400">Description:</span>
+            <span class="font-medium text-right break-words min-w-0">{{ formData.description }}</span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <span class="text-gray-400">Amount:</span>
+            <span class="font-medium">{{ formatCurrency(parseFloat(formData.amount || 0)) }}</span>
+          </div>
+        </div>
+
+        <div class="flex gap-3 sm:gap-4 justify-end">
+          <button type="button" @click="handleCancelConfirmation"
+            class="px-5 sm:px-8 py-2 sm:py-2.5 text-sm sm:text-base border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium">
+            Back
+          </button>
+          <button type="button" @click="handleConfirmSubmit"
+            class="px-5 sm:px-8 py-2 sm:py-2.5 text-sm sm:text-base border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

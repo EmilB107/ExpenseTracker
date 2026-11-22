@@ -25,14 +25,10 @@ export function useMainLogic(expenses) {
 
     const handleFormCancel = () => {
         showForm.value = false
-        searchQuery.value = ''
-        showWeeklyTable.value = false
     }
 
     const handleFormSubmit = () => {
         showForm.value = false
-        searchQuery.value = ''
-        showWeeklyTable.value = false
     }
 
     return {

@@ -21,9 +21,11 @@ const {
 </script>
 
 <template>
-  <ExpensesForm v-if="showForm" :add-expense="addExpense" @cancel="handleFormCancel" @submit="handleFormSubmit" />
+  <Transition name="modal">
+    <ExpensesForm v-if="showForm" :add-expense="addExpense" @cancel="handleFormCancel" @submit="handleFormSubmit" />
+  </Transition>
 
-  <div v-else class="max-w-6xl mx-auto p-6">
+  <div class="max-w-6xl mx-auto p-6">
 
     <div class="mb-6">
       <h1 class="text-2xl font-bold mb-5">Expense Tracker</h1>
