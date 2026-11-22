@@ -6,15 +6,20 @@ import { useFormLogic } from '../composable/useFormLogic'
 import { formatCurrency } from '../utils/currency'
 
 const props = defineProps({
-  addExpense: {
+  save: {
     type: Function,
     required: true
+  },
+  expense: {
+    type: Object,
+    default: null
   }
 })
 
 const emit = defineEmits(['cancel', 'submit'])
 
 const {
+  isEditing,
   formData,
   errors,
   showConfirmation,
@@ -27,11 +32,11 @@ const {
   handleCancelConfirmation,
   handleCancel,
   getMaxDate,
-  initializeDate
-} = useFormLogic(props.addExpense, emit)
+  initializeForm
+} = useFormLogic(props.save, emit, props.expense)
 
 onMounted(() => {
-  initializeDate()
+  initializeForm()
 })
 </script>
 
@@ -40,7 +45,8 @@ onMounted(() => {
     <div class="modal-panel w-full max-w-lg my-8 bg-[#0f172a] border-2 border-gray-800 rounded-lg p-5 lg:p-8"
       role="dialog" aria-modal="true" aria-labelledby="expense-modal-title">
       <h2 id="expense-modal-title" class="text-xl font-bold mb-5">
-        {{ showConfirmation ? 'Confirm Expense' : 'Add New Expense' }}
+        <template v-if="showConfirmation">{{ isEditing ? 'Confirm Changes' : 'Confirm Expense' }}</template>
+        <template v-else>{{ isEditing ? 'Edit Expense' : 'Add New Expense' }}</template>
       </h2>
 
       <form v-show="!showConfirmation" @submit.prevent="handleSubmit" class="space-y-6">
@@ -83,14 +89,14 @@ onMounted(() => {
           <button type="submit"
             class="px-5 sm:px-8 py-2 sm:py-2.5 text-sm sm:text-base border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             :disabled="!isFormValid">
-            Submit
+            {{ isEditing ? 'Save' : 'Submit' }}
           </button>
         </div>
       </form>
 
       <div v-if="showConfirmation">
         <p class="mb-6 text-gray-300">
-          Are you sure you want to add this expense? You won't be able to edit or delete it later.
+          {{ isEditing ? 'Save these changes to the expense?' : 'Add this expense?' }}
         </p>
 
         <div class="mb-6 space-y-2 text-sm">

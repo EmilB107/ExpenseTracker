@@ -1,29 +1,50 @@
 <script setup>
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import { MagnifyingGlassIcon, EllipsisHorizontalIcon } from '@heroicons/vue/24/outline'
 import { useStorage } from '../composable/useStorage'
 import { useMainLogic } from '../composable/useMainLogic'
 import WeeklyTable from './WeeklyTable.vue'
 import ExpensesForm from './ExpensesForm.vue'
+import RowActionsMenu from './RowActionsMenu.vue'
+import DeleteExpenseModal from './DeleteExpenseModal.vue'
 
-const { expenses, addExpense } = useStorage()
+const { expenses, addExpense, updateExpense, deleteExpense } = useStorage()
 
 const {
   searchQuery,
   showWeeklyTable,
   showForm,
+  editingExpense,
+  expenseToDelete,
+  openMenu,
   filteredExpenses,
   totalExpenses,
   formatCurrency,
   handleAddClick,
+  handleEditClick,
+  saveExpense,
   handleFormCancel,
-  handleFormSubmit
-} = useMainLogic(expenses)
+  handleFormSubmit,
+  handleDeleteClick,
+  handleDeleteConfirm,
+  handleDeleteCancel,
+  toggleMenu,
+  closeMenu
+} = useMainLogic(expenses, { addExpense, updateExpense, deleteExpense })
 </script>
 
 <template>
   <Transition name="modal">
-    <ExpensesForm v-if="showForm" :add-expense="addExpense" @cancel="handleFormCancel" @submit="handleFormSubmit" />
+    <ExpensesForm v-if="showForm" :expense="editingExpense" :save="saveExpense" @cancel="handleFormCancel"
+      @submit="handleFormSubmit" />
   </Transition>
+
+  <Transition name="modal">
+    <DeleteExpenseModal v-if="expenseToDelete" :expense="expenseToDelete" @confirm="handleDeleteConfirm"
+      @cancel="handleDeleteCancel" />
+  </Transition>
+
+  <RowActionsMenu v-if="openMenu" :anchor="openMenu.anchor" @edit="handleEditClick(openMenu.expense)"
+    @delete="handleDeleteClick(openMenu.expense)" @close="closeMenu" />
 
   <div class="max-w-6xl mx-auto p-6">
 
@@ -52,6 +73,7 @@ const {
                 <th class="px-6 py-4 text-white font-bold w-35">DATE</th>
                 <th class="px-6 py-4 text-white font-bold w-50">DESCRIPTION</th>
                 <th class="px-6 py-4 text-white font-bold w-35">AMOUNT</th>
+                <th class="w-14"><span class="sr-only">Actions</span></th>
               </tr>
             </thead>
 
@@ -69,10 +91,19 @@ const {
                 <td class="px-6 py-4 font-semibold whitespace-nowrap">
                   {{ formatCurrency(expense.amount) }}
                 </td>
+                <td class="pr-3 py-2 text-right">
+                  <button type="button" @click="toggleMenu(expense, $event.currentTarget)"
+                    :aria-expanded="openMenu?.expense.id === expense.id" aria-haspopup="menu"
+                    aria-label="Expense actions" title="Actions"
+                    class="p-1.5 rounded-full text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors"
+                    :class="{ 'bg-gray-800 text-white': openMenu?.expense.id === expense.id }">
+                    <EllipsisHorizontalIcon class="w-5 h-5" />
+                  </button>
+                </td>
               </tr>
 
               <tr v-if="filteredExpenses.length === 0">
-                <td colspan="3" class="px-6 py-4 text-center text-gray-500">
+                <td colspan="4" class="px-6 py-4 text-center text-gray-500">
                   {{ searchQuery ? `No expenses found matching "${searchQuery}"` : 'No expenses yet.' }}
                 </td>
               </tr>

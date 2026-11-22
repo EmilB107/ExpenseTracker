@@ -1,6 +1,8 @@
 import { ref, computed } from 'vue'
 
-export function useFormLogic(addExpense, emit) {
+export function useFormLogic(save, emit, initialExpense = null) {
+    const isEditing = initialExpense !== null
+
     const formData = ref({
         date: '',
         description: '',
@@ -46,12 +48,22 @@ export function useFormLogic(addExpense, emit) {
         return isValid
     }
 
+    const hasChanges = computed(() => {
+        if (!isEditing) return true
+
+        const [month, day, year] = initialExpense.date.split('/')
+        return formData.value.date !== `${year}-${month}-${day}` ||
+            formData.value.description.trim() !== initialExpense.description.trim() ||
+            parseFloat(formData.value.amount) !== initialExpense.amount
+    })
+
     const isFormValid = computed(() => {
         return formData.value.date &&
             formData.value.description.trim() &&
             formData.value.amount &&
             !isNaN(formData.value.amount) &&
-            parseFloat(formData.value.amount) > 0
+            parseFloat(formData.value.amount) > 0 &&
+            hasChanges.value
     })
 
     const resetForm = () => {
@@ -68,8 +80,15 @@ export function useFormLogic(addExpense, emit) {
         showConfirmation.value = false
     }
 
-    const initializeDate = () => {
-        selectedDate.value = new Date()
+    const initializeForm = () => {
+        if (isEditing) {
+            const [month, day, year] = initialExpense.date.split('/')
+            selectedDate.value = new Date(year, month - 1, day)
+            formData.value.description = initialExpense.description
+            formData.value.amount = String(initialExpense.amount)
+        } else {
+            selectedDate.value = new Date()
+        }
         updateFormDate()
     }
 
@@ -101,7 +120,7 @@ export function useFormLogic(addExpense, emit) {
         // Format date as MM/DD/YYYY
         const formattedDate = formatDateForDisplay(selectedDate.value)
 
-        addExpense({
+        save({
             date: formattedDate,
             description: formData.value.description,
             amount: parseFloat(formData.value.amount)
@@ -128,6 +147,7 @@ export function useFormLogic(addExpense, emit) {
 
     return {
         // State
+        isEditing,
         formData,
         errors,
         showConfirmation,
@@ -139,7 +159,7 @@ export function useFormLogic(addExpense, emit) {
         // Methods
         validateForm,
         resetForm,
-        initializeDate,
+        initializeForm,
         updateFormDate,
         formatDateForDisplay,
         handleSubmit,

@@ -59,8 +59,21 @@ export function useStorage() {
     expensesRaw.value.push(newExpense)
   }
 
+  const updateExpense = (id, changes) => {
+    const index = expensesRaw.value.findIndex(expense => expense.id === id)
+    if (index !== -1) {
+      expensesRaw.value[index] = { ...expensesRaw.value[index], ...changes }
+    }
+  }
+
+  const deleteExpense = (id) => {
+    expensesRaw.value = expensesRaw.value.filter(expense => expense.id !== id)
+  }
+
   return {
     expenses,
-    addExpense
+    addExpense,
+    updateExpense,
+    deleteExpense
   }
 }
