@@ -24,65 +24,72 @@ const {
 
 <template>
   <div class="max-w-6xl lg:max-w-1/2 mx-auto">
-    <div class="mb-6">
-      <div class="flex gap-3 items-center text-sm">
-        <select
-          v-model="selectedYear"
-          class="year-select w-1/3 sm:w-1/5 md:w-1/6 lg:w-1/5 xl:w-1/4 px-4 py-2.5 border-2 border-gray-800 rounded-full focus:outline-none focus:border-blue-500 transition-colors"
-        >
-          <option v-for="year in availableYears" :key="year" :value="year">
-            {{ year }}
-          </option>
-        </select>
-      </div>
-    </div>
+    <p v-if="availableYears.length === 0"
+      class="border-2 border-gray-800 rounded-lg px-6 py-4 text-center text-sm text-gray-500">
+      No expenses yet. Add one to see weekly totals.
+    </p>
 
-    <div class="border-2 border-gray-800 rounded-lg overflow-hidden">
-      <div class="overflow-x-auto">
-        <div class="max-h-95 overflow-y-auto">
-          <table class="w-full border-collapse text-sm table-color text-left table-fixed">
-            <thead class="sticky top-0 z-10 table-color border-b-1 border-gray-700">
-              <tr>
-                <th class="px-6 py-4 text-white font-bold w-1/2">WEEK #</th>
-                <th class="px-6 py-4 text-white font-bold w-1/2">TOTAL EXPENSES</th>
-              </tr>
-            </thead>
-            
-            <tbody>
-              <tr
-                v-for="(weekData, index) in weeklyTotals"
-                :key="weekData.week"
-                :class="index % 2 === 0 ? 'table-color' : 'table-color2'"
-              >
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span 
-                    class="cursor-help" 
-                    :title="`${weekData.startDate} - ${weekData.endDate}`"
-                  >
-                    Week {{ weekData.week }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 font-semibold whitespace-nowrap">
-                  {{ formatCurrency(weekData.total) }}
-                </td>
-              </tr>
-              
-              <tr v-if="weeklyTotals.length === 0">
-                <td colspan="2" class="px-6 py-4 text-center text-gray-500">
-                  No expenses found for {{ selectedYear }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <template v-else>
+      <div class="mb-6">
+        <div class="flex gap-3 items-center text-sm">
+          <select
+            v-model="selectedYear"
+            class="year-select w-1/3 sm:w-1/5 md:w-1/6 lg:w-1/5 xl:w-1/4 px-4 py-2.5 border-2 border-gray-800 rounded-full focus:outline-none focus:border-blue-500 transition-colors"
+          >
+            <option v-for="year in availableYears" :key="year" :value="year">
+              {{ year }}
+            </option>
+          </select>
         </div>
       </div>
-    </div>
 
-    <div class="mt-6 flex justify-center lg:justify-end">
-      <p class="text-md font-medium">
-        YEARLY TOTAL ({{ selectedYear }}) = {{ formatCurrency(yearlyTotal) }}
-      </p>
-    </div>
+      <div class="border-2 border-gray-800 rounded-lg overflow-hidden">
+        <div class="overflow-x-auto">
+          <div class="max-h-95 overflow-y-auto">
+            <table class="w-full border-collapse text-sm table-color text-left table-fixed">
+              <thead class="sticky top-0 z-10 table-color border-b-1 border-gray-700">
+                <tr>
+                  <th class="px-6 py-4 text-white font-bold w-1/2">WEEK #</th>
+                  <th class="px-6 py-4 text-white font-bold w-1/2">TOTAL EXPENSES</th>
+                </tr>
+              </thead>
+            
+              <tbody>
+                <tr
+                  v-for="(weekData, index) in weeklyTotals"
+                  :key="weekData.week"
+                  :class="index % 2 === 0 ? 'table-color' : 'table-color2'"
+                >
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span 
+                      class="cursor-help" 
+                      :title="`${weekData.startDate} - ${weekData.endDate}`"
+                    >
+                      Week {{ weekData.week }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 font-semibold whitespace-nowrap">
+                    {{ formatCurrency(weekData.total) }}
+                  </td>
+                </tr>
+              
+                <tr v-if="weeklyTotals.length === 0">
+                  <td colspan="2" class="px-6 py-4 text-center text-gray-500">
+                    No expenses found for {{ selectedYear }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-center lg:justify-end">
+        <p class="text-md font-medium">
+          YEARLY TOTAL ({{ selectedYear }}) = {{ formatCurrency(yearlyTotal) }}
+        </p>
+      </div>
+    </template>
   </div>
 </template>
 
