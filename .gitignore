@@ -47,8 +47,5 @@ Thumbs.db
 *.tmp
 *.temp
 
-# Claude Code
-CLAUDE.md
-
 # Local notes
 notes.md

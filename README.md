@@ -2,6 +2,8 @@
 
 A modern expense tracking application built with Vue 3, Vite, and Tailwind CSS.
 
+Originally built as an internship technical assessment, now repurposed for personal use.
+
 ## Features
 
 - Add Expenses - Input date, description, and amount with form validation
