@@ -3,7 +3,7 @@ import { formatCurrency } from '../utils/currency'
 
 export function useMainLogic(expenses, { addExpense, updateExpense, deleteExpense }) {
     const searchQuery = ref('')
-    const showWeeklyTable = ref(false)
+    const showTotals = ref(false)
     const showForm = ref(false)
     const editingExpense = ref(null)
     const expenseToDelete = ref(null)
@@ -84,7 +84,7 @@ export function useMainLogic(expenses, { addExpense, updateExpense, deleteExpens
     return {
         // State
         searchQuery,
-        showWeeklyTable,
+        showTotals,
         showForm,
         editingExpense,
         expenseToDelete,

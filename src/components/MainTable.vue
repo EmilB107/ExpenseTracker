@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { MagnifyingGlassIcon, EllipsisHorizontalIcon, CloudArrowUpIcon } from '@heroicons/vue/24/outline'
 import { useStorage } from '../composable/useStorage'
 import { useMainLogic } from '../composable/useMainLogic'
-import WeeklyTable from './WeeklyTable.vue'
+import TotalsTable from './TotalsTable.vue'
 import ExpensesForm from './ExpensesForm.vue'
 import RowActionsMenu from './RowActionsMenu.vue'
 import DeleteExpenseModal from './DeleteExpenseModal.vue'
@@ -26,7 +26,7 @@ const {
 
 const {
   searchQuery,
-  showWeeklyTable,
+  showTotals,
   showForm,
   editingExpense,
   expenseToDelete,
@@ -157,9 +157,9 @@ const syncIconClass = computed(() => {
     </div>
 
     <div class="mt-6 mb-6 flex flex-col-reverse lg:flex-row gap-4 justify-between items-center font-medium">
-      <button @click="showWeeklyTable = !showWeeklyTable"
+      <button @click="showTotals = !showTotals"
         class="px-6 py-2.5 border-2 border-gray-800 rounded-full hover:bg-gray-800 transition-colors text-sm">
-        {{ showWeeklyTable ? 'Hide Weekly Totals' : 'View Weekly Totals by Year' }}
+        {{ showTotals ? 'Hide Totals' : 'View Monthly & Weekly Totals' }}
       </button>
 
       <p class="text-md">
@@ -167,7 +167,7 @@ const syncIconClass = computed(() => {
       </p>
     </div>
 
-    <WeeklyTable v-if="showWeeklyTable" :expenses="expenses" />
+    <TotalsTable v-if="showTotals" :expenses="expenses" />
     
   </div>
 </template>

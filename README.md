@@ -11,7 +11,7 @@ Live app: https://emilb107.github.io/ExpenseTracker/
 - Add, Edit, and Delete Expenses - Input date, description, and amount with form validation
 - Search Functionality - Filter expenses by description
 - Main Table - View all expenses sorted by date (descending) with striped rows
-- Weekly Totals - Aggregate expenses by week with ISO 8601 week numbers
+- Monthly and Weekly Totals - See spending per month or per ISO 8601 week for any year
 - Local Storage - Works offline out of the box, with data saved in your browser
 - Google Drive Sync (optional) - Sync expenses across devices using your own Google Drive
 - Responsive Design - Mobile-friendly layout that works across all devices
@@ -86,7 +86,7 @@ ExpenseTracker/
 │   │   └── style.css               # Global styles, Tailwind import, modal transitions
 │   ├── components/
 │   │   ├── MainTable.vue           # Layout shell: header, search, expense table
-│   │   ├── WeeklyTable.vue         # Weekly aggregation view
+│   │   ├── TotalsTable.vue         # Monthly/weekly totals view
 │   │   ├── ExpensesForm.vue        # Add/edit expense modal with confirmation step
 │   │   ├── DeleteExpenseModal.vue  # Delete confirmation dialog
 │   │   ├── RowActionsMenu.vue      # Per-row "⋯" menu with Edit and Delete
@@ -95,7 +95,8 @@ ExpenseTracker/
 │   ├── composable/
 │   │   ├── useStorage.js           # Data source: localStorage or Google Drive
 │   │   ├── useMainLogic.js         # Search, modals, and table UI state
-│   │   ├── useWeeklyLogic.js       # Weekly aggregation calculations
+│   │   ├── useWeeklyLogic.js       # Year selection and weekly aggregation
+│   │   ├── useMonthlyLogic.js      # Monthly aggregation
 │   │   └── useFormLogic.js         # Form validation and submission
 │   ├── utils/
 │   │   ├── currency.js             # Peso currency formatting
@@ -129,10 +130,11 @@ This project follows a composable-based architecture for better code organizatio
 - Responsive column widths with truncated descriptions
 - Custom dark scrollbar styling
 
-### Weekly Aggregation
+### Monthly and Weekly Totals
+- Switch between Monthly (default) and Weekly views
+- Shared year selector dropdown
+- Shows only months or weeks with expenses
 - ISO 8601 week number calculation (Week 1 contains first Thursday)
-- Year selector dropdown with dark theme
-- Shows only weeks with expenses
 - Hover tooltips display date ranges (Monday-Sunday)
 - Yearly total calculation
 - Empty state when there are no expenses yet
